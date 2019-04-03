@@ -53,13 +53,14 @@ var game = {
     },
     stop: function () {
         clearInterval(this.interval);
-        this.status.innerHTML="You win!";
     }
 }
 
 function startGame() {
     game.start();
     pacman = new component(1, 1, "yellow", 1, 1);
+    enemy = new component(1, 1, "red", 8, 7);
+    enemy2 = new component(1,1, "green", 10,7);
 }
 
 function component(width, height, color, x, y) {
@@ -73,12 +74,13 @@ function component(width, height, color, x, y) {
         ctx = game.context;
         ctx.fillStyle = color;
         ctx.fillRect(cell_size * this.x, cell_size * this.y, this.width * cell_size, this.height * cell_size);
+       
     }
     this.newPos = function () {
         this.x = (this.x + this.speedX) % grid_size;
-        this.x = this.x < 0 ? grid_size-1 : this.x;
+        this.x = this.x < 0 ? grid_size - 1 : this.x;
         this.y = (this.y + this.speedY) % grid_size;
-        this.y = this.y < 0 ? grid_size-1 : this.y;
+        this.y = this.y < 0 ? grid_size - 1 : this.y;
         // console.log("TEST "+ this.x+ " "+ this.y);
         if (game.grid[this.x][this.y] == 1) {
             this.x = this.x - this.speedX;
@@ -86,27 +88,61 @@ function component(width, height, color, x, y) {
             this.speedX = 0;
             this.speedY = 0;
         }
-        game.grid[this.x][this.y] = 2;
-        var count = 0;
-        for(var i = 0; i< grid_size; i++){
-            for(var j = 0; j<grid_size; j++){
-                if (game.grid[i][j] == 0){
-                    count++;
-                }
-            }
-        }
-        // console.log("COUNT ="+count);
-        game.status.innerHTML = 201 -count;
-        if (count <= 0){
-            game.stop();
-        }
     }
 }
+function calculateScore() {
+    game.grid[pacman.x][pacman.y] = 2;
+    var count = 0;
+    for (var i = 0; i < grid_size; i++) {
+        for (var j = 0; j < grid_size; j++) {
+            if (game.grid[i][j] == 0) {
+                count++;
+            }
+        }
+    }
+    // console.log("COUNT ="+count);
+    game.status.innerHTML = "Score = " + (201 - count);
+    if (count <= 0) {
+        game.stop();
+        game.status.innerHTML = "You win!";
+    }
+}
+function hasCollisionOccured(bot){
+    return (bot.x == pacman.x && bot.y == pacman.y);
+}
+function hasBotStopped(bot){
+    return (bot.speedX == 0 && bot.speedY == 0);
+}
 function updateGameArea() {
+    if (hasCollisionOccured(enemy) || hasCollisionOccured(enemy2)){
+        game.status.innerHTML = "You lose!";
+        game.stop();
+        return;
+    }
     game.clear();
     pacman.newPos();
     pacman.update();
 
+    if (hasCollisionOccured(enemy) || hasCollisionOccured(enemy2)){
+        game.status.innerHTML = "You lose!";
+        enemy.newPos();
+        enemy.update();
+        enemy2.newPos();
+        enemy2.update();
+        game.stop();
+        return;
+    }
+    calculateScore();
+    if(Math.random()>0.9 ||hasBotStopped(enemy) ){
+        moveBot(enemy);
+    }
+    if(Math.random()>0.9 || (hasBotStopped(enemy2))){
+        moveBot(enemy2);
+    }
+    enemy.newPos();
+    enemy.update();
+    enemy2.newPos();
+    enemy2.update();
 }
 function changeSpeed(e) {
     e = e || window.event;
@@ -125,6 +161,25 @@ function changeSpeed(e) {
     if (e.keyCode == '40') {
         pacman.speedX = 0;
         pacman.speedY = 1;
+    }
+}
+function moveBot(bot) {
+    // if (enemy.speedX == 0 && enemy.speedY == 0){
+    randnum = Math.floor(Math.random() * 4)
+    switch (randnum) {
+        case 0: bot.speedX = 1;
+            bot.speedY = 0;
+            break;
+        case 1: bot.speedX = 0;
+            bot.speedY = 1;
+            break;
+        case 2: bot.speedX = -1;
+            bot.speedY = 0;
+            break;
+        case 3: bot.speedX = 0;
+            bot.speedY = -1;
+            break;
+        // }
     }
 }
 window.onload = function () {
