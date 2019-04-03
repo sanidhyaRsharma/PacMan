@@ -1,26 +1,29 @@
 var cell_size = 32;
+var grid_size = 20;
 var game = {
     canvas: document.createElement("canvas"),
-    grid: [[1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1],
-           [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-           [1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,1],
-           [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1],
-           [1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,1],
-           [1,0,0,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,0,1],
-           [1,0,0,1,1,1,1,0,0,0,1,0,1,1,0,1,0,1,0,1],
-           [1,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,1],
-           [1,0,0,1,0,0,1,0,1,0,1,0,1,1,1,1,1,1,0,1],
-           [1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
-           [1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
-           [1,0,0,1,0,0,1,0,1,0,1,0,1,1,1,1,1,1,0,1],
-           [1,0,0,1,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,1],
-           [1,0,0,1,1,1,1,0,0,0,1,0,1,1,0,1,0,1,0,1],
-           [1,0,0,0,0,0,0,0,1,0,1,0,0,1,0,1,0,1,0,1],
-           [1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,1],
-           [1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1],
-           [1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,1],
-           [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
-           [1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1]],
+    status: document.getElementById("game-status"),
+    food_count: 0,
+    grid: [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1]],
     start: function () {
         this.canvas.width = 640;
         this.canvas.height = 640;
@@ -32,19 +35,25 @@ var game = {
     },
     clear: function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.fillStyle = "#444444";
+        this.context.fillStyle = "#000";
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.fillStyle = "#000000";
-        for(var i = 0; i<20; i++){
-            for (var j = 0; j<20; j++){
-                if(this.grid[i][j] == 1){
-                    this.context.fillRect(i*cell_size, j*cell_size, cell_size, cell_size);
+        this.context.fillStyle = "#0055ff";
+        for (var i = 0; i < grid_size; i++) {
+            for (var j = 0; j < grid_size; j++) {
+                if (this.grid[i][j] == 1) {
+                    this.context.fillRect(i * cell_size, j * cell_size, cell_size, cell_size);
+                }
+                else if (this.grid[i][j] == 0) {
+                    this.context.fillStyle = "yellow";
+                    this.context.fillRect(i * cell_size + 14, j * cell_size + 14, 4, 4);
+                    this.context.fillStyle = "#0055ff";
                 }
             }
         }
     },
-    stop: function(){
+    stop: function () {
         clearInterval(this.interval);
+        this.status.innerHTML="You win!";
     }
 }
 
@@ -63,42 +72,57 @@ function component(width, height, color, x, y) {
     this.update = function () {
         ctx = game.context;
         ctx.fillStyle = color;
-        ctx.fillRect(cell_size*this.x, cell_size*this.y, this.width*cell_size, this.height*cell_size);
+        ctx.fillRect(cell_size * this.x, cell_size * this.y, this.width * cell_size, this.height * cell_size);
     }
-    this.newPos = function() {
-        this.x = (this.x+this.speedX) % 20 ;
-        this.x = this.x < 0 ? 20 : this.x;
-        this.y = (this.y+this.speedY) % 20;
-        this.y = this.y < 0 ? 20 : this.y;
-        if(game.grid[this.x][this.y] == 1){
-            this.x = this.x-this.speedX;
-            this.y = this.y-this.speedY;
+    this.newPos = function () {
+        this.x = (this.x + this.speedX) % grid_size;
+        this.x = this.x < 0 ? grid_size-1 : this.x;
+        this.y = (this.y + this.speedY) % grid_size;
+        this.y = this.y < 0 ? grid_size-1 : this.y;
+        // console.log("TEST "+ this.x+ " "+ this.y);
+        if (game.grid[this.x][this.y] == 1) {
+            this.x = this.x - this.speedX;
+            this.y = this.y - this.speedY;
             this.speedX = 0;
             this.speedY = 0;
         }
+        game.grid[this.x][this.y] = 2;
+        var count = 0;
+        for(var i = 0; i< grid_size; i++){
+            for(var j = 0; j<grid_size; j++){
+                if (game.grid[i][j] == 0){
+                    count++;
+                }
+            }
+        }
+        // console.log("COUNT ="+count);
+        game.status.innerHTML = 201 -count;
+        if (count <= 0){
+            game.stop();
+        }
     }
 }
-function updateGameArea(){
+function updateGameArea() {
     game.clear();
     pacman.newPos();
     pacman.update();
 
 }
-function changeSpeed(e){
+function changeSpeed(e) {
     e = e || window.event;
-    if(e.keyCode == '37'){
+    if (e.keyCode == '37') {
         pacman.speedX = -1;
         pacman.speedY = 0;
     }
-    if(e.keyCode == '38'){
+    if (e.keyCode == '38') {
         pacman.speedX = 0;
         pacman.speedY = -1;
     }
-    if(e.keyCode == '39'){
+    if (e.keyCode == '39') {
         pacman.speedX = 1;
         pacman.speedY = 0;
     }
-    if(e.keyCode == '40'){
+    if (e.keyCode == '40') {
         pacman.speedX = 0;
         pacman.speedY = 1;
     }
