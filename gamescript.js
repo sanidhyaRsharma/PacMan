@@ -4,7 +4,8 @@ var game = {
     canvas: document.createElement("canvas"),
     status: document.getElementById("game-status"),
     food_count: 0,
-    grid: [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+    grid: 
+    [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
     [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -25,7 +26,7 @@ var game = {
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1]],
     start: function () {
-        this.canvas.width = 640;
+        this.canvas.width = 640;    
         this.canvas.height = 640;
         this.context = this.canvas.getContext("2d");
         this.clear();
@@ -133,10 +134,10 @@ function updateGameArea() {
         return;
     }
     calculateScore();
-    if(Math.random()>0.9 ||hasBotStopped(enemy) ){
+    if(Math.random()>0.75||hasBotStopped(enemy) ){
         moveBot(enemy);
     }
-    if(Math.random()>0.9 || (hasBotStopped(enemy2))){
+    if(Math.random()>0.75 || (hasBotStopped(enemy2))){
         moveBot(enemy2);
     }
     enemy.newPos();
